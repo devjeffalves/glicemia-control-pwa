@@ -29,11 +29,16 @@ interface Registro {
 
 export default function GraficoGlicemia({ registros }: { registros: Registro[] }) {
 
-    const labels = registros.map((r) =>
+    const registrosOrdenados = [...registros].sort(
+        (a, b) =>
+            new Date(a.data).getTime() - new Date(b.data).getTime()
+    );
+
+    const labels = registrosOrdenados.map((r) =>
         new Date(r.data).toLocaleDateString("pt-BR")
     );
 
-    const valores = registros.map((r) => r.valor);
+    const valores = registrosOrdenados.map((r) => r.valor);
 
     const data = {
         labels,
@@ -42,7 +47,8 @@ export default function GraficoGlicemia({ registros }: { registros: Registro[] }
                 label: "Glicemia",
                 data: valores,
                 borderColor: "rgb(59,130,246)",
-                backgroundColor: "rgba(59,130,246,0.5)"
+                backgroundColor: "rgba(59,130,246,0.3)",
+                tension: 0.4
             }
         ]
     };

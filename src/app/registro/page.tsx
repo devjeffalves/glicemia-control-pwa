@@ -7,12 +7,72 @@ export default function Registro() {
     const [valor, setValor] = useState("");
     const [observacao, setObservacao] = useState("");
     const [mensagem, setMensagem] = useState("");
+    const [gravando, setGravando] = useState(false);
 
     const observacoesRapidas = [
         "Em jejum",
         "2h após almoço",
         "À noite"
     ];
+    const iniciarReconhecimento = () => {
+
+        const SpeechRecognition =
+            (window as any).SpeechRecognition ||
+            (window as any).webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            alert("Seu navegador não suporta reconhecimento de voz");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = "pt-BR";
+        recognition.continuous = false;
+
+        setGravando(true);
+
+        recognition.start();
+
+        recognition.onresult = (event: any) => {
+
+            const texto = event.results[0][0].transcript.toLowerCase();
+
+            console.log("Você disse:", texto);
+
+            interpretarTexto(texto);
+
+            setGravando(false);
+
+        };
+
+        recognition.onerror = () => {
+            setGravando(false);
+        };
+
+    };
+
+    const interpretarTexto = (texto: string) => {
+
+        const numero = texto.match(/\d+/);
+
+        if (numero) {
+            setValor(numero[0]);;
+        }
+
+        if (texto.includes("jejum")) {
+            setObservacao("Em jejum");
+        }
+
+        if (texto.includes("almoço")) {
+            setObservacao("2h após almoço");
+        }
+
+        if (texto.includes("noite")) {
+            setObservacao("À noite");
+        }
+
+    };
 
     const salvarRegistro = async () => {
 
@@ -43,7 +103,7 @@ export default function Registro() {
 
     return (
 
-        <main className="flex flex-col gap-6 p-6 max-w-md mx-auto pb-24">
+        <main className="flex flex-col gap-6 p-6 max-w-md mx-auto pb-28">
 
             <h1 className="text-3xl font-bold text-center">
                 Registrar Glicemia
@@ -56,13 +116,22 @@ export default function Registro() {
                 onChange={(e) => setValor(e.target.value)}
                 className="border p-4 text-2xl rounded-xl"
             />
+            <button
+                onClick={iniciarReconhecimento}
+                className={`p-4 rounded-xl text-white text-lg ${gravando ? "bg-red-600" : "bg-purple-600"
+                    }`}
+            >
+
+                {gravando ? "🎤 Ouvindo..." : "🎤 Registrar por voz"}
+
+            </button>
             <div className="grid grid-cols-2 gap-3">
 
                 {observacoesRapidas.map((obs) => (
                     <button
                         key={obs}
                         onClick={() => setObservacao(obs)}
-                        className="bg-gray-200 p-4 rounded-xl text-lg"
+                        className="bg-gray-200 p-4 text-black rounded-xl text-lg"
                     >
                         {obs}
                     </button>
