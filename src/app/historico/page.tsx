@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import GraficoGlicemia from "../../components/GraficoGlicemia";
 
 interface Registro {
     _id: string;
@@ -42,11 +43,15 @@ export default function Historico() {
 
     return (
 
-        <main className="flex flex-col gap-6 p-6 max-w-md mx-auto">
+        <main className="flex flex-col gap-6 p-6 max-w-md mx-auto pb-24">
 
             <h1 className="text-3xl font-bold text-center">
                 Histórico de Glicemia
             </h1>
+
+            {registros.length > 0 && (
+                <GraficoGlicemia registros={registros} />
+            )}
 
             {registros.length === 0 && (
                 <p className="text-center text-lg">
