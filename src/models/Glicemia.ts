@@ -2,18 +2,24 @@ import mongoose from "mongoose";
 
 const GlicemiaSchema = new mongoose.Schema({
 
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+
     valor: {
         type: Number,
         required: true
     },
 
-    observacao: {
-        type: String
-    },
-
     data: {
         type: Date,
-        default: Date.now
+        default: Date.now // 🔥 resolve automaticamente
+    },
+
+    observacao: {
+        type: String
     }
 
 });

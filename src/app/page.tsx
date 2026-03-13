@@ -2,10 +2,16 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRequireAuth } from "@/app/hooks/useRequireAuth";
 
 
 export default function Home() {
+  // Protege a rota de usuários não autenticados
+  useRequireAuth();
   useEffect(() => {
+
+
 
     const intervalo = setInterval(() => {
 
@@ -60,12 +66,22 @@ export default function Home() {
     }
 
   };
+  const { logout, user } = useAuth();
 
 
 
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-6 gap-10 pb-24">
+    <>
+      <div className="w-full flex justify-end items-center px-4 py-2 space-x-4 bg-white shadow-sm fixed top-0 right-0 z-20">
+        {user?.nome && (
+          <span className="text-gray-700">Olá, {user.nome}</span>
+        )}
+        <button onClick={logout} className="text-red-600">Sair</button>
+      </div>
+
+      <main className="flex flex-col items-center justify-center min-h-screen p-6 gap-10 pb-24" style={{ paddingTop: '64px' }}>
+        
       <button
         onClick={pedirPermissaoNotificacao}
         className="bg-blue-600 text-white p-4 rounded-xl text-lg"
@@ -97,6 +113,8 @@ export default function Home() {
 
       </div>
 
-    </main>
+
+      </main>
+    </>
   );
 }

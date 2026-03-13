@@ -5,10 +5,14 @@ import { usePathname } from "next/navigation";
 
 export default function BottomNav() {
 
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    const active = (path: string) =>
-        pathname === path ? "text-blue-600" : "text-gray-500";
+  // Ocultar BottomNav em telas de login ou cadastro
+  const shouldHide = pathname.startsWith("/login") || pathname.startsWith("/cadastro");
+  if (shouldHide) return null;
+
+  const active = (path: string) =>
+    pathname === path ? "text-blue-600" : "text-gray-500";
 
     return (
         <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow flex justify-around p-4 text-lg">
