@@ -6,10 +6,15 @@ export const sendEmail = async (to: string, subject: string, text: string, html:
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
         port: Number(process.env.EMAIL_PORT),
+        secure: process.env.EMAIL_PORT === "465", // true para 465, false para outras portas
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
         },
+        tls: {
+            ciphers: "SSLv3",
+            rejectUnauthorized: false
+        }
     });
 
     try {
