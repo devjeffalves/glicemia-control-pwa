@@ -105,6 +105,12 @@ export default function Login() {
                     {loading ? "Entrando..." : "Entrar"}
                 </button>
 
+                <div className="flex justify-center mt-2">
+                    <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
+                        Esqueci minha senha
+                    </Link>
+                </div>
+
             </form>
 
             <p className="mt-4">

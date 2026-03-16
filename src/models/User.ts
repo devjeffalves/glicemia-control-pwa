@@ -5,6 +5,8 @@ export interface IUser {
     email: string;
     password: string;
     role: "user" | "admin";
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
     createdAt: Date;
 }
 
@@ -30,6 +32,16 @@ const UserSchema = new Schema<IUser>({
         type: String,
         enum: ["user", "admin"],
         default: "user",
+    },
+
+    resetPasswordToken: {
+        type: String,
+        default: null,
+    },
+
+    resetPasswordExpires: {
+        type: Date,
+        default: null,
     },
 
     createdAt: {
