@@ -13,7 +13,7 @@ export function useRequireAuth() {
   useEffect(() => {
     if (loading) return;
     // Páginas públicas
-    const publicPaths = ["/login", "/cadastro"];
+    const publicPaths = ["/login", "/cadastro", "/forgot-password", "/reset-password"];
     if (!user && !publicPaths.includes(pathname)) {
       router.replace("/login");
     }

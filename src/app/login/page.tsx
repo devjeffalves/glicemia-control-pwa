@@ -106,7 +106,7 @@ export default function Login() {
                 </button>
 
                 <div className="flex justify-center mt-2">
-                    <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
+                    <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800 transition-colors">
                         Esqueci minha senha
                     </Link>
                 </div>
