@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const MONGO_URI = process.env.MONGO_URI!;
 
 if (!MONGO_URI) {
-    throw new Error("Defina MONGO_URI no .env");
+    throw new Error("Defina MONGO_URI no arquivo .env (local) ou nas Environment Variables (Vercel)");
 }
 
 let cached = (global as any).mongoose;
@@ -30,7 +30,14 @@ async function connectMongo() {
 
     }
 
-    cached.conn = await cached.promise;
+    try {
+        cached.conn = await cached.promise;
+    } catch (error) {
+        // Reset do cache em caso de falha — permite tentativa futura
+        cached.promise = null;
+        cached.conn = null;
+        throw error;
+    }
 
     return cached.conn;
 }

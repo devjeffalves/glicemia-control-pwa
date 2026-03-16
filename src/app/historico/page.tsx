@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRequireAuth } from "@/app/hooks/useRequireAuth";
 import GraficoGlicemia from "../../components/GraficoGlicemia";
 import jsPDF from "jspdf";
 
@@ -12,6 +13,8 @@ interface Registro {
 }
 
 export default function Historico() {
+  // Protege rota de usuário não autenticado
+  useRequireAuth();
 
     const [registros, setRegistros] = useState<Registro[]>([]);
     const [mesSelecionado, setMesSelecionado] = useState("");
@@ -221,7 +224,7 @@ export default function Historico() {
                 <select
                     value={mesSelecionado}
                     onChange={(e) => setMesSelecionado(e.target.value)}
-                    className="border p-3 bg-gray-400 rounded-xl"
+                    className="border border-gray-300 dark:border-gray-700 p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 >
                     <option value="">Todos os meses</option>
                     <option value="1">Janeiro</option>
@@ -241,7 +244,7 @@ export default function Historico() {
                 <select
                     value={periodoSelecionado}
                     onChange={(e) => setPeriodoSelecionado(e.target.value)}
-                    className="border p-3 bg-gray-400 rounded-xl"
+                    className="border border-gray-300 dark:border-gray-700 p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 >
                     <option value="">Todos os períodos</option>
                     <option value="Em jejum">Em jejum</option>
@@ -268,12 +271,12 @@ export default function Historico() {
             {registrosFiltrados.map((registro) => (
                 <div
                     key={registro._id}
-                    className="border p-4 rounded-xl flex flex-col gap-2"
+                    className="border border-gray-200 dark:border-gray-800 p-4 rounded-xl flex flex-col gap-2 bg-white dark:bg-gray-900/50 shadow-sm"
                 >
 
                     <div className="flex justify-between items-center">
 
-                        <span className="text-sm  text-gray-700 font-medium">
+                        <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                             {formatarDataHora(registro.data)}
                         </span>
 
@@ -284,7 +287,7 @@ export default function Historico() {
                     </div>
 
                     {registro.observacao && (
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 dark:text-gray-300">
                             {registro.observacao}
                         </p>
                     )}

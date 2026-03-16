@@ -6,55 +6,63 @@ interface User {
     _id: string;
     nome: string;
     email: string;
-    // outros campos do usuário
+    role: "user" | "admin";
 }
 
 interface AuthContextProps {
     user: User | null;
     loading: boolean;
     logout: () => Promise<void>;
+    refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
     user: null,
     loading: true,
     logout: async () => { },
+    refreshUser: async () => { },
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function loadUser() {
-            try {
-                const res = await fetch("/api/auth/me", {
-                    method: "GET",
-                    credentials: "include", // ✅ envia o cookie com JWT
-                });
+    const loadUser = async () => {
+        try {
+            const res = await fetch("/api/auth/me", {
+                method: "GET",
+                credentials: "include", // envia o cookie HttpOnly com JWT
+            });
 
-                if (res.ok) {
-                    const data = await res.json();
-                    setUser(data);
-                } else {
-                    setUser(null);
-                }
-            } catch (error) {
-                console.error("Erro ao carregar usuário:", error);
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data);
+            } else {
                 setUser(null);
-            } finally {
-                setLoading(false);
             }
+        } catch (error) {
+            console.error("Erro ao carregar usuário:", error);
+            setUser(null);
+        } finally {
+            setLoading(false);
         }
+    };
 
+    useEffect(() => {
         loadUser();
     }, []);
+
+    // Permite que o componente de login notifique o contexto após autenticação
+    const refreshUser = async () => {
+        setLoading(true);
+        await loadUser();
+    };
 
     const logout = async () => {
         try {
             await fetch("/api/auth/logout", {
                 method: "POST",
-                credentials: "include", // ✅ garante que o cookie seja enviado
+                credentials: "include", // garante que o cookie seja enviado
             });
             setUser(null);
             window.location.href = "/login";
@@ -64,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, logout }}>
+        <AuthContext.Provider value={{ user, loading, logout, refreshUser }}>
             {children}
         </AuthContext.Provider>
     );

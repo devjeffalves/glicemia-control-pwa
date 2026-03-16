@@ -3,20 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-// Inline SVG icons as fallback (replaceable with react-icons if installed)
-const EyeIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="mostrar">
-    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-const EyeSlashIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="ocultar">
-    <path d="M3 3l18 18" />
-    <path d="M1 12s4-7 11-7c3 0 5 1 7 3" />
-    <path d="M10.58 10.59a3 3 0 0 0 4.83 3.28" />
-  </svg>
-);
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Cadastro() {
 
@@ -114,7 +101,7 @@ export default function Cadastro() {
                     aria-label="Mostrar senha"
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 p-1"
                   >
-                    {mostrarSenha ? <EyeSlashIcon /> : <EyeIcon />}
+                    {mostrarSenha ? <FaEyeSlash /> : <FaEye />} 
                   </button>
                 </div>
 

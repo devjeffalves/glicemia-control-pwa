@@ -2,6 +2,7 @@ import connectMongo from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/auth/auth";
+import UserSession from "@/models/UserSession";
 
 export async function POST(req: Request) {
   await connectMongo();
@@ -28,10 +29,28 @@ export async function POST(req: Request) {
 
   const token = generateToken(user._id.toString());
 
+  // Registra a sessão do usuário para o painel de desenvolvedor
+  const userAgent = req.headers.get("user-agent") || "";
+  const session = await UserSession.create({
+    userId: user._id,
+    userName: user.nome,
+    userEmail: user.email,
+    userAgent,
+    status: "active",
+  });
+
   const body = JSON.stringify({ message: "Login realizado" });
   const headers = new Headers();
   headers.set("Content-Type", "application/json");
-  headers.set("Set-Cookie", `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`);
+
+  // SameSite=Lax permite que o cookie seja enviado em redirecionamentos (compatível com Vercel)
+  const isProd = process.env.NODE_ENV === "production";
+  const cookie = `token=${token}; Path=/; HttpOnly; Max-Age=604800; ${isProd ? 'Secure; ' : ''}SameSite=Lax`;
+  headers.set("Set-Cookie", cookie);
+
+  // Armazena o sessionId em um segundo cookie para rastreamento de logout
+  const sessionCookie = `sid=${session._id.toString()}; Path=/; HttpOnly; Max-Age=604800; ${isProd ? 'Secure; ' : ''}SameSite=Lax`;
+  headers.append("Set-Cookie", sessionCookie);
 
   return new Response(body, { status: 200, headers });
 }

@@ -73,11 +73,21 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full flex justify-end items-center px-4 py-2 space-x-4 bg-white shadow-sm fixed top-0 right-0 z-20">
-        {user?.nome && (
-          <span className="text-gray-700">Olá, {user.nome}</span>
-        )}
-        <button onClick={logout} className="text-red-600">Sair</button>
+      <div className="w-full flex justify-between items-center px-4 py-2 bg-white shadow-sm fixed top-0 right-0 z-20">
+        <div className="flex items-center gap-3">
+          {user?.nome && (
+            <span className="text-gray-700 font-medium whitespace-nowrap">Olá, {user.nome}</span>
+          )}
+          {user?.role === "admin" && (
+            <Link 
+              href="/dev-painel" 
+              className="flex items-center gap-1 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-0.5 rounded border border-slate-200 transition-colors"
+            >
+              <span>📊</span> Painel Dev
+            </Link>
+          )}
+        </div>
+        <button onClick={logout} className="text-red-600 text-sm font-medium">Sair</button>
       </div>
 
       <main className="flex flex-col items-center justify-center min-h-screen p-6 gap-10 pb-24" style={{ paddingTop: '64px' }}>

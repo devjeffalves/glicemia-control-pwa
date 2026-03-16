@@ -7,8 +7,11 @@ export default function BottomNav() {
 
   const pathname = usePathname();
 
-  // Ocultar BottomNav em telas de login ou cadastro
-  const shouldHide = pathname.startsWith("/login") || pathname.startsWith("/cadastro");
+  // Ocultar BottomNav em telas de login, cadastro ou painel dev
+  const shouldHide = 
+    pathname.startsWith("/login") || 
+    pathname.startsWith("/cadastro") || 
+    pathname.startsWith("/dev-painel");
   if (shouldHide) return null;
 
   const active = (path: string) =>

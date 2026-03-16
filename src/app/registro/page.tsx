@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRequireAuth } from "@/app/hooks/useRequireAuth";
 
 export default function Registro() {
+  // Protege rota de usuário não autenticado
+  useRequireAuth();
 
     const [valor, setValor] = useState("");
     const [observacao, setObservacao] = useState("");

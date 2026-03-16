@@ -3,25 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
-// Inline SVG icons as fallback (replaceable with react-icons if installed)
-const EyeIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="mostrar">
-        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-        <circle cx="12" cy="12" r="3" />
-    </svg>
-);
-const EyeSlashIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="ocultar">
-        <path d="M3 3l18 18" />
-        <path d="M1 12s4-7 11-7c3 0 5 1 7 3" />
-        <path d="M10.58 10.59a3 3 0 0 0 4.83 3.28" />
-    </svg>
-);
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
 
     const router = useRouter();
+    const { refreshUser } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -40,6 +29,8 @@ export default function Login() {
         const response = await fetch("/api/auth/login", {
 
             method: "POST",
+
+            credentials: "include", // garante envio/recebimento do cookie HttpOnly em produção
 
             headers: {
                 "Content-Type": "application/json"
@@ -61,8 +52,8 @@ export default function Login() {
             return;
         }
 
-        localStorage.setItem("token", data.token);
-
+        // Atualiza o estado de autenticação e redireciona para a home
+        await refreshUser();
         router.push("/");
 
     };
@@ -99,7 +90,7 @@ export default function Login() {
                         required
                     />
                     <button type="button" onClick={() => setMostrarSenha(!mostrarSenha)} aria-label="Mostrar senha" className="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
-                        {mostrarSenha ? <EyeSlashIcon /> : <EyeIcon />}
+                        {mostrarSenha ? <FaEyeSlash /> : <FaEye />}
                     </button>
                 </div>
 
